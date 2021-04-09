@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>  
+    div.padded {  
+      padding-top: 0px;  
+      padding-right: 100px;  
+      padding-bottom: 0.25in;  
+      padding-left: 100px;  
+    }  
+  </style> 
+<title>CS 184</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body style="background-color:#1F2833; color:#C5C6C7">
+    <br />
+    <h1 align="middle">184 Final Project Proposal</h1>
+    <h2 align="middle">Font Rasterization</h2>
+    <h2 align="middle">Kyle Wallace, Raiya Choudhuri, Scott Durand, Alex Buckley</h2>
+    <br />
+
+    <div class="padded">
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                        <img src="images/banner.jpg" width="700px"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <h2 align="middle">Summary</h2>
+        <p> In our project we intend to create an efficient system for rasterizing the font characters in a TrueTypeFont (.ttf) file. Next we hope to implement a simple texture-sourced flood fill into the rasterized area. Afterwards, we hope to create a physics simulation to model collisions between our character objects. </p>
+
+        <br />
+        <br />
+
+        <h2 align="middle">Problem Description</h2>
+        <p> So far in this class, we have not discussed a method for rasterizing non-triangular shapes. We hope to overcome this by designing an algorithm that rasterizes generic closed composite bezier curves, namely, fonts. We also hope to implement texture mapping to render the flood fill of a font character from a texture source. Afterwards, we hope to challenge ourselves by implementing a physics simulation, treating each character as a separate physical object.  </p>
+        <p> Fonts that are parameterized by curves are more accurate and scalable than bitmap or triangle-based fonts are. Determining how to rasterize and fill these fonts is important for modern rendering of text. </p>
+        <p> Right now we intend to implement font rasterization by performing intersection tests between horizontal lines and the bezier curves that comprise the font character. Using this information, we can traverse through the pixels, marking them as inside or outside of the character based on how many bezier curve intersections there are to the pixel’s left (an odd number of intersections means that this pixel is inside of the character, and an even number means that it is outside). To prevent jaggies / aliasing, we will utilize supersampling, as we did with triangles. When considering the efficiency of our code, we may limit supersampling to only those pixels near the edges of our rasterized character. We also intend to explore thread and GPU-based methods for parallelizing our code. </p>
+
+        <br />
+        <br />
+
+        <h2 align="middle">Goals and Deliverables</h2>
+        <p> Given a .ttf file, an input string (and potentially other options such as positioning, alignment, size, etc.), we will create images that display characters in TrueType font, which are made of quadratic Bézier curves. </p>
+        <i> Define how you will measure the quality / performance of your system </i> 
+        <p> We will measure the quality of our output via its likeness to existing images produced using the font at different resolutions / scales. We will measure performance via timed benchmarking </p>
+        <i> What we plan to deliver </i>
+        <p> - Given a font as a .ttf file, rasterize an input string. </p>
+        <p> - Render character outlines given TTF fonts. </p>
+        <p> - Render flood filled characters given TTF fonts. </p>
+        <p> - Make this process efficient by exploiting parallelism (GPU / TLP) </p>
+        <i> What we plan to deliver </i>
+        <p> - Fill characters using pixel samples from a source texture file. </p>
+        <p> - Create a physics simulation for closed bezier outlines. </p>
+
+
+        <br />
+        <br />
+
+        <h2 align="middle">Schedule</h2>
+        <b> Week of 4/12 </b>
+        <p> - Proposal revisions sent by EOD 4/13 </p>
+        <p> - Modify project 1 to additionally rasterize bezier curves. </p>
+        <p> - Render a character outline given a .ttf file. </p>
+        <b> Week of 4/19 </b>
+        <p> - Render a flood filled character given a .ttf file. </p>
+        <b> Week of 4/26 </b>
+        <p> - Milestone deliverables due 4/27 </p>
+        <p> - Optimize our code w/ parallelization. </p>
+        <p> - Flood fill a character using a source texture file. </p>
+        <b> Week of 5/3 </b>
+        <p> - Final presentation 5/6 </p>
+        <p> - Implement a physics simulation for individual character objects. </p>
+        <b> Week of 5/10 </b>
+        <p> - Final deliverables due 5/11 </p>
+        <p> - Implement a physics simulation for individual character objects (cont).  </p>
+
+        <br />
+        <br />
+
+        <h2 align="middle">Resources</h2>
+        <p> FreeType Reference: https://www.freetype.org/freetype2/docs/reference/ </p>
+        <p> https://www.freetype.org/freetype2/docs/reference/ft2-outline_processing.html#ft_outline  </p>
+        <p> Intersection of Bezier Curves: https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=1000&context=facpub </p>
+        <p> GPU Reference: https://docs.nvidia.com/cuda/ </p>
+        <p> We intend to extend the rasterizer code from project 1, using our personal computers. </p>
+
+        <br />
+        <br />
+    </div>
+</body>
+</html>
+
+
+
+
