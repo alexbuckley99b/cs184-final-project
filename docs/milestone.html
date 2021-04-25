@@ -4,10 +4,7 @@
 <title>CS184 Milestone Status Report</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 <style>
-    body {
-        background-color: #1F2833;
-        color: white;
-    }
+
     h6 {
         font-weight: bold;
     }
@@ -19,17 +16,58 @@
     <div class="container">
         <h2>CS184 Milestone Status Report</h2>
         <h5><b>Font Rasterization:</b> Kyle Wallace, Raiya Choudhuri, Scott Durand, Alex Buckley</h5>
-        <h4>Summary</h4>
-        <h6>A Subheading</h6>
         <p> Create a short webpage for your milestone report. This should be about 1 page long if printed. You should briefly summarize what you have accomplished, preliminary results, reflect on progress relative to your plan, and update your work plan as appropriate. </p>
-        <h4>Video</h4>
+        <h6>Accomplishments</h6>
+        During the past two weeks, we were able to accomplish the following items:
+        <ol>
+            <li>Rasterize Bezier curves in the cs184 Rasterizer project given control points</li>
+            <li>Prove our logic for flood-filling works by implementing flood-fill to the right of a Bezier curve</li>
+            <li>Linking the FreeType library to the project</li>
+            <li>Making necessary changes so the Rasterizer can accept .ttf files</li>
+            <li>Writing a parser class to parse a .ttf file and extract Bezier curve control points for each letter</li>
+            <li>Rasterize letter outlines using the extracted Bezier control points</li>
+            <li>Rasterize text (multiple letters) outlines with given .ttf file and font size</li>
+            <!-- <li>Rasterize flood-filled text and characters</li> -->
+        </ol>
+        <div class="divider"></div>
+
+        <h6>Preliminary Results</h6>
+
+        <p>Here are some photos of preliminary results. </p>
+
+        <div class="row">
+            <div class="col s4">
+              <img src="images/banner.jpg" width="300" height="200">
+              <p>Image caption</p>
+            </div>
+            <div class="col s4">
+                <img src="images/banner.jpg" width="300" height="200">
+                <p>Image caption</p>
+            </div>
+            <div class="col s4">
+                <img src="images/banner.jpg" width="300" height="200">
+                <p>Image caption</p>
+            </div>
+          </div>
+        
+        <div class="divider"></div>
+
+        <h6>Progress Relative to Plan</h6>
+
+        <p>Over the past two weeks, we had planned to implement rasterizing bezier curves, parsing a .ttf file to render a character outline, and rendering a flood filled character. We accomplished most of these things and a bit more, seeing as we also implemented font size and text with multiple characters, which were not in the schedule.</p>
+        <p>However, implementing flood-filled characters proved to be a bit more of a challenge than expected. While we had implemented flood-fill to the right of a quadratic Bezier curve, we had not known that the font file uses line segments, quadratic Bezier curves, and cubic Bezier curves. New edge cases are introduced and more conditions need to be handled with lines and cubic Bezier curves, and therefore we needed to modify our algorithm and add a library for solving cubic polynomials.</p>
+        <p> Depending on if we did it in time or not, either this concludes by saying we are on schedule or we shall add finishing up flood-filled characters to the week of 4/26. </p>
+
+        <div class="divider"></div>
+
+        <h6>Video</h6>
         <p>A short 1-minute video summarizing your progress. The style of this milestone video is quite free. One idea is to make several slides with narration, showing the general idea and current progress. You can include some screenshots of code and images. You can also run your current program and record the screen to show us what is happening. Keep in mind that your video submission should clearly explain and demonstrate to us what you have achieved so far.</p>
         <iframe width="560" height="315" src="https://www.youtube.com/embed/" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        
+        <div class="divider"></div>
 
-        <h4>Slides</h4>
+        <h6>Slides</h6>
         <p>2-3 slides summarizing your project and current progress.</p>
-        <a href="">Slides here</a>
-        <br>
-        <br>
+        <p><a href="">Slides here</a></p>
     </div>
 </body>
