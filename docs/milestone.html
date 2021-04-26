@@ -27,7 +27,7 @@
             <li>Writing a parser class to parse a .ttf file and extract Bezier curve control points for each letter</li>
             <li>Rasterize letter outlines using the extracted Bezier control points</li>
             <li>Rasterize text (multiple letters) outlines with given .ttf file and font size</li>
-            <!-- <li>Rasterize flood-filled text and characters</li> -->
+            <li>Start implementing flood-filled characters and text</li> 
         </ol>
         <div class="divider"></div>
 
@@ -55,8 +55,8 @@
         <h6>Progress Relative to Plan</h6>
 
         <p>Over the past two weeks, we had planned to implement rasterizing bezier curves, parsing a .ttf file to render a character outline, and rendering a flood filled character. We accomplished most of these things and a bit more, seeing as we also implemented font size and text with multiple characters, which were not in the schedule.</p>
-        <p>However, implementing flood-filled characters proved to be a bit more of a challenge than expected. While we had implemented flood-fill to the right of a quadratic Bezier curve, we had not known that the font file uses line segments, quadratic Bezier curves, and cubic Bezier curves. New edge cases are introduced and more conditions need to be handled with lines and cubic Bezier curves, and therefore we needed to modify our algorithm and add a library for solving cubic polynomials.</p>
-        <p> Depending on if we did it in time or not, either this concludes by saying we are on schedule or we shall add finishing up flood-filled characters to the week of 4/26. </p>
+        <p>However, implementing flood-filled characters proved to be a bit more of a challenge than expected. While we had implemented flood-fill to the right of a quadratic Bezier curve, the font file can use line segments, quadratic Bezier curves, and cubic Bezier curves. New edge cases are introduced and more conditions need to be handled with lines and cubic Bezier curves, and therefore we needed to modify our algorithm and add a library for solving cubic polynomials. </p>
+        <p>Because of the remaining bugs in flood-filling, we shall add finishing up flood-filled characters to the week of 4/26 in our schedule. </p>
 
         <div class="divider"></div>
 
