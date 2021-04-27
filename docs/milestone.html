@@ -16,7 +16,7 @@
     <div class="container">
         <h2>CS184 Milestone Status Report</h2>
         <h5><b>Font Rasterization:</b> Kyle Wallace, Raiya Choudhuri, Scott Durand, Alex Buckley</h5>
-        <p> Create a short webpage for your milestone report. This should be about 1 page long if printed. You should briefly summarize what you have accomplished, preliminary results, reflect on progress relative to your plan, and update your work plan as appropriate. </p>
+        <p></p>
         <h6>Accomplishments</h6>
         During the past two weeks, we were able to accomplish the following items:
         <ol>
@@ -29,45 +29,87 @@
             <li>Rasterize text (multiple letters) outlines with given .ttf file and font size</li>
             <li>Start implementing flood-filled characters and text</li> 
         </ol>
+
+        <p>Our approach was to first split the work between rasterizing Bezier curves and parsing .ttf files. We had the rasterizer draw Bezier curves by using the method of incrementing over t to draw outlines, while also working on the parser that would take a .ttf as input, find the Bezier curves for each letter, and pass them to a form usable by the rasterizer.</p>
+        <p>After this, we were able to draw the text outlines, but filling between the Bezier curves used a different algorithm. For each row of pixels in the image buffer, we would compute intersections between that row and every curve in the text, and then fill inbetween the intersection points. Computing the location of the intersections requires solving the associated polynomial using the Bezier control points and the y-coordinate of the row. This gives the t value which can be used to find the location in x and y.</p>
         <div class="divider"></div>
 
         <h6>Preliminary Results</h6>
 
-        <p>Here are some photos of preliminary results. </p>
+        <p>The fonts used (in order) are <a href="https://fonts.google.com/specimen/Rubik+Mono+One">Rubik Mono One</a>, <a href="https://www.dafont.com/chlorinar.font">Chlorinar</a>, <a href="https://www.dafont.com/cherry-lime.font">Cherry Lime</a>, Arial, and Times New Roman.</p>
 
-        <div class="row">
-            <div class="col s4">
-              <img src="images/banner.jpg" width="300" height="200">
-              <p>Image caption</p>
-            </div>
-            <div class="col s4">
-                <img src="images/banner.jpg" width="300" height="200">
-                <p>Image caption</p>
-            </div>
-            <div class="col s4">
-                <img src="images/banner.jpg" width="300" height="200">
-                <p>Image caption</p>
-            </div>
-          </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Example of font</th>
+                    <th>Our font rasterization</th>
+                </tr>
+              </thead>
+            <tr>
+                <td>
+                    <img src="images/tro_ex.png" width="80%">
+                </td>
+
+                <td>
+                    <img src="images/tro_render.png" width="80%">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="images/chlorinar_ex.png" width="50%">
+                </td>
+
+                <td>
+                    <img src="images/chlorinar_render.png" width="50%">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="images/hello_world_ex.png" width="50%">
+                </td>
+
+                <td>
+                    <img src="images/hello_world_render.png" width="50%">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="images/lorem_ex.png" width="50%">
+                </td>
+
+                <td>
+                    <img src="images/lorem_render.png" width="50%">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="images/times_ex.png" width="80%">
+                </td>
+
+                <td>
+                    <img src="images/times_render.png" width="80%">
+                </td>
+            </tr>
+        </table>
         
         <div class="divider"></div>
 
         <h6>Progress Relative to Plan</h6>
 
         <p>Over the past two weeks, we had planned to implement rasterizing bezier curves, parsing a .ttf file to render a character outline, and rendering a flood filled character. We accomplished most of these things and a bit more, seeing as we also implemented font size and text with multiple characters, which were not in the schedule.</p>
-        <p>However, implementing flood-filled characters proved to be a bit more of a challenge than expected. While we had implemented flood-fill to the right of a quadratic Bezier curve, the font file can use line segments, quadratic Bezier curves, and cubic Bezier curves. New edge cases are introduced and more conditions need to be handled with lines and cubic Bezier curves, and therefore we needed to modify our algorithm and add a library for solving cubic polynomials. </p>
-        <p>Because of the remaining bugs in flood-filling, we shall add finishing up flood-filled characters to the week of 4/26 in our schedule. </p>
+        <p>However, implementing flood-filled characters proved to be a bit more of a challenge than expected. While we had implemented flood-fill to the right of a quadratic Bezier curve, the font file can use line segments, quadratic Bezier curves, and cubic Bezier curves. New edge cases are introduced and more conditions need to be handled with lines and cubic Bezier curves, and therefore we needed to modify our algorithm and add a library for solving cubic polynomials. Also, we haven't implemented anti-aliasing via supersampling.</p>
+        <p>Because of the remaining bugs in flood-filling, we shall add finishing up flood-filled characters to the week of 4/26 in our schedule, but otherwise we are keeping our schedule as is. </p>
 
         <div class="divider"></div>
 
         <h6>Video</h6>
-        <p>A short 1-minute video summarizing your progress. The style of this milestone video is quite free. One idea is to make several slides with narration, showing the general idea and current progress. You can include some screenshots of code and images. You can also run your current program and record the screen to show us what is happening. Keep in mind that your video submission should clearly explain and demonstrate to us what you have achieved so far.</p>
+        <!-- Replace the URL in the src -->
         <iframe width="560" height="315" src="https://www.youtube.com/embed/" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         
         <div class="divider"></div>
 
         <h6>Slides</h6>
-        <p>2-3 slides summarizing your project and current progress.</p>
+        <!-- Add the slides URL in the href -->
         <p><a href="">Slides here</a></p>
     </div>
 </body>
