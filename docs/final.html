@@ -59,7 +59,7 @@
         <figcaption>from <a href="https://javascript.info/bezier-curve">https://javascript.info/bezier-curve</a></figcaption>    
         </figure>    
         <p>We do this with the y-value of a row and every Bezier curve in the text to accumulate a set of intersection points, and then sort them from left to right. From there, every other pair of intersections can be filled, since those will represent being "inside" of a glyph. This process is repeated for every row in the buffer to create flood-filled text. </p>
-        <p>Our approach likely differs from the FreeType library and other library's approaches to rasterization, which utilize extra steps to ensure clarity through techniques such as grid alignment. These extra procedures seemed complex and not well-documented, and so we thought it would be better to take a simpler approach.</p>
+        <p>Our approach likely differs from the FreeType library and other libraries' approaches to rasterization, which utilize extra steps to ensure clarity through techniques such as grid alignment. These extra procedures seemed complex and not well-documented, and so we thought it would be better to take a simpler approach.</p>
         <p>One of the problems encountered during flood-filling was that one source stated that .ttf files specified only quadratic Bezier curves and lines, which are easy to solve, but upon actually working with them, we discovered that they can include cubic Beziers as well. The <a href="https://math.vanderbilt.edu/schectex/courses/cubic/">formula</a> for solving cubic polynomials is tedious to implement, and instead we looked at adding a <a href="http://math.ivanovo.ac.ru/dalgebra/Khashin/poly/index.html">library</a> for solving polynomial equations. A good lesson learned was that sometimes your sources can be incomplete or incorrect, and working with real data often involves surprises. </p>
         <p>Below are some examples of our font rasterization with flood-filling.</p>
         <figure align="middle">
@@ -81,7 +81,7 @@
         <figure align="middle">
           <img src="images/aliasing.png" />
           <img src="images/antialiasing.png" />
-          <p>Example without supersampling on the left, example with supersampling on the right.</p>
+          <p>Example without supersampling first, example with supersampling second.</p>
         </figure>
              
         <p></p><b><br />Texture Mapping</b></p>
@@ -171,7 +171,7 @@
 
         <h6>Contributions From Each Team Member</h6>
         <p> Kyle Wallace - Using FreeType to parse TrueType files, outline curve decomposition, scaling and positioning glyphs, passing decomposed outlines to the rasterizer. </p>
-        <p> Raiya Choudhuri </p>
+        <p> Raiya Choudhuri - Initial attempts to write a flood-fill algorithm, supersampling, milestone website </p>
         <p> Scott Durand </p>
         <p> Alex Buckley - Bezier curve calculation, rasterization of glyph outlines, reading PNG files, texture mapping, videos.</p>
 
