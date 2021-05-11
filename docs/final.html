@@ -55,7 +55,7 @@
         <p><b><br />Rasterizing Flood-Filled Text</b></p>
         <p> To rasterize flood-filled text, we utilized an algorithm that calculated intersections between each row in the pixel buffer and the Bezier curves for each glyph in the text. Since the .ttf file specifies the control points of the Bezier curve, we use the Bezier curve equation to solve for the t parameter associated with the y-position of the row.  The equation can then be used to solve for the x-position of the intersection using the newfound t parameter and the control points. </p>
         <figure>
-        <img src="images/equations.png" width="100%">
+        <img src="images/equations.png" width="75%">
         <figcaption>from <a href="https://javascript.info/bezier-curve">https://javascript.info/bezier-curve</a></figcaption>    
         </figure>    
         <p>We do this with the y-value of a row and every Bezier curve in the text to accumulate a set of intersection points, and then sort them from left to right. From there, every other pair of intersections can be filled, since those will represent being "inside" of a glyph. This process is repeated for every row in the buffer to create flood-filled text. </p>
@@ -91,10 +91,8 @@
         
         <p>Below are some examples of our font rasterization with texture mapping.</p>
         <figure align="middle">
-          <img src="images/fire_texture.png"/>
-          <img src="images/water_texture.png"/>
-         </figure>
-        <figure align="middle">
+          <img src="images/fire_texture.png" />
+          <img src="images/water_texture.png" />
           <img src="images/color_texture.png" />
         </figure>
 
