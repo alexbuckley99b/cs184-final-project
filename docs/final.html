@@ -28,9 +28,9 @@
         <br />[A description of lessons learned.]</p>
 
         <p><b><br />Rasterizing Glyph Outlines via Bezier Curves</b></p>
-        <p>[Summary of your technical approach, techniques used, algorithms implemented. Highlight how your approach varied from the references used, the unique decisions you made and why.]
-        <br />[A description of problems encountered and how you tackled them.]
-        <br />[A description of lessons learned.]</p>
+        <p> One method of text rasterization is through the glyph outlines created by the lines and curves. In order to rasterize these outlines, after the TrueType file is parsed into a set of BezierCurve objects, each of these objects are passed into RasterizerImp::rasterize_bc. If the curve consists of one or two points, rasterize_point() or rasterize_line() are called. Otherwise, for a range of t values between 0 and 1 (incrementing by .005 gives a smooth enough result for text unless it is very large) the point on the curve corresponding to that t value is calculated iteratively by linearly interpolating each consecutive pair of points until there is only one point left. This value is then rounded down to the nearest integer to get a pixel coordinate and added to the pixel buffer using the fill_pixel method.  </p>
+
+        <p> One problem encountered was adjusting the Bezier curve calculation to be iterative instead of recursive. In project 2, we implemented the calculation recursively. However, since the calculation is being done multiple times within a larger function (rasterize_bc), a recursive call does not work. An iterative solution was much cleaner. Another problem was determining the appropriate step size for incrementing t. Too large and there are gaps in the outline, but the smaller the step size, the longer it takes to rasterize an outline. .005 is a good balance between the two - it does not result in gaps unless letters are very large, but is not so small that rasterization takes forever. </p>
 
         <p><b><br />Rasterizing Flood-Filled Text</b></p>
         <p> To rasterize flood-filled text, we utilized an algorithm that calculated intersections between each row in the pixel buffer and the Bezier curves for each glyph in the text. Since the .ttf file specifies the control points of the Bezier curve, we use the Bezier curve equation to solve for the t parameter associated with the y-position of the row.  The equation can then be used to solve for the x-position of the intersection using the newfound t parameter and the control points. </p>
