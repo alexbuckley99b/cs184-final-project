@@ -4,7 +4,6 @@
 <title>CS184 Final Report</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 <style>
-
     h6 {
         font-weight: bold;
     }
@@ -18,7 +17,7 @@
         <h5><b>Font Rasterization:</b> Kyle Wallace, Raiya Choudhuri, Scott Durand, Alex Buckley</h5>
         <p></p>
         <h6>Abstract</h6>
-        <p>[A paragraph summary of the entire project.]</p>
+        <p>In this project, we worked on rasterizing fonts from TrueTypeFont(.ttf) files. These files specify a font by specifying spacing between glyphs, providing the control points of lines and Bezier curves that make up each glyph, and more. To accomplish font rasterization, we first added support for the CS 184 Rasterizer project to parse .ttf files and draw Bezier curves. We then implemented an algorithm to rasterize flood-filled glyphs, and modified it to work with supersampling. Finally, we added the ability to map textures onto the glyphs and optimized our code. </p>
 
         <div class="divider"></div>
 
@@ -34,14 +33,24 @@
         <br />[A description of lessons learned.]</p>
 
         <p><b><br />Rasterizing Flood-Filled Text</b></p>
-        <p>[Summary of your technical approach, techniques used, algorithms implemented. Highlight how your approach varied from the references used, the unique decisions you made and why.]
-        <br />[A description of problems encountered and how you tackled them.]
-        <br />[A description of lessons learned.]</p>
+        <p> To rasterize flood-filled text, we utilized an algorithm that calculated intersections between each row in the pixel buffer and the Bezier curves for each glyph in the text. Since the .ttf file specifies the control points of the Bezier curve, we use the Bezier curve equation to solve for the t parameter associated with the y-position of the row.  The equation can then be used to solve for the x-position of the intersection using the newfound t parameter and the control points. </p>
+        <figure>
+        <img src="images/equations.png" width="100%">
+        <figcaption>from <a href="https://javascript.info/bezier-curve">https://javascript.info/bezier-curve</a></figcaption>    
+        </figure>    
+        <p>We do this with the y-value of a row and every Bezier curve in the text to accumulate a set of intersection points, and then sort them from left to right. From there, every other pair of intersections can be filled, since those will represent being "inside" of a glyph. This process is repeated for every row in the buffer to create flood-filled text. </p>
+        <p>Our approach likely differs from the FreeType library and other library's approaches to rasterization, which utilize extra steps to ensure clarity through techniques such as grid alignment. These extra procedures seemed complex and not well-documented, and so we thought it would be better to take a simpler approach.</p>
+        <p>One of the problems encountered during flood-filling was that one source stated that .ttf files specified only quadratic Bezier curves and lines, which are easy to solve, but upon actually working with them, we discovered that they can include cubic Beziers as well. The <a href="https://math.vanderbilt.edu/schectex/courses/cubic/">formula</a> for solving cubic polynomials is tedious to implement, and instead we looked at adding a <a href="http://math.ivanovo.ac.ru/dalgebra/Khashin/poly/index.html">library</a> for solving polynomial equations. A good lesson learned was that sometimes your sources can be incomplete or incorrect, and working with real data often involves surprises. </p>
 
         <p><b><br />Anti-aliasing via Supersampling</b></p>
-        <p>[Summary of your technical approach, techniques used, algorithms implemented. Highlight how your approach varied from the references used, the unique decisions you made and why.]
-        <br />[A description of problems encountered and how you tackled them.]
-        <br />[A description of lessons learned.]</p>
+        
+        <p>To create anti-aliased rasterizations, we took advantage of the work done in project 1 to add anti-aliasing via supersampling. Some elements, like resolving samples to the frame buffer or resizing the sample buffer, were already complete and didn't need to be changed, which made this approach convenient. The FreeType library provides several methods of anti-aliasing, including a default <a href="https://www.freetype.org/freetype2/docs/ft2faq.html#other-antialias">"high speed, low memory"</a> algorithm, and <a href="https://www.freetype.org/freetype2/docs/reference/ft2-lcd_rendering.html">LCD filtering</a>. Our approach of supersampling is more memory-intensive and likely slower than these approaches, however, it was more straightforward and finding documentation on these alternate techniques was difficult.</p>
+        
+        <p>The technique used to fill the supersampled sample buffer would need to be altered from the one used to flood-fill text. The slightly modified algorithm would look at each pixel row of the sample buffer, then look at each row of supersamples within that row, calculate intersections at the sub-pixel y-position of the supersample, and fill samples between pairs of supersampled intersections. The overall logic of the algorithm remained the same, however the complexity arose from iterating correctly and making buffer accesses correctly. </p>
+
+        <p>Several problems were encountered while implementing supersampling. The first was trying to comprehend the existing code from the project 1 implementation, as the team member's code we were using had laid out supersamples in the sample buffer and iterated through them differently than the team member who was trying to implement supersampling. Some techniques that helped remedy this situation were drawing out pictures of the supersample layout, printing out the indices of buffer accesses, and reviewing the project spec. These techniques also helped in fixing issues where supersampling did not look correct and it was clear that some accesses were being made incorrectly or some number was being rounded incorrectly. </p>
+
+        <p>Another issue was figuring out the order in which to iterate through supersamples. There were two main options - for each row, iterate through supersamples within each pixel or iterate through each row of supersamples. The first approach seemed pretty naive and simple to implement, but inefficient, whereas the second seemed more complex but ultimately made more sense. Ultimately, the first was implemented to test out the technique and figure out which areas were important for the second approach, and then iterating through rows of supersamples was implemented, with comparisons made to the pixel-by-pixel approach to see where bugs arose and if there were any logical errors. </p>
 
         <p></p><b><br />Texture Mapping</b></p>
         <p>[Summary of your technical approach, techniques used, algorithms implemented. Highlight how your approach varied from the references used, the unique decisions you made and why.]
@@ -78,6 +87,6 @@
 
         <h6>Slides</h6>
         <!-- Add the slides URL in the href -->
-        <p><a href="">Slides available here</a></p>
+        <p><a href="https://docs.google.com/presentation/d/1oFR8T_QCcM2wz8iYrW4CdIzfXCMRY-HIcSTnDIBTqyQ/">Slides available here</a></p>
     </div>
 </body>
