@@ -13,8 +13,8 @@
 </head>
 <body>
     <div class="container">
-        <h2>CS184 Final Report</h2>
-        <h5><b>Font Rasterization:</b> Kyle Wallace, Raiya Choudhuri, Scott Durand, Alex Buckley</h5>
+        <h2><b>Font Rasterization</b></h2>
+        <h5>CS 184 Final Project by Kyle Wallace, Raiya Choudhuri, Scott Durand, Alex Buckley</h5>
         <p></p>
         <h6>Abstract</h6>
         <p>In this project, we worked on rasterizing fonts from TrueTypeFont(.ttf) files. These files specify a font by specifying spacing between glyphs, providing the control points of lines and Bezier curves that make up each glyph, and more. To accomplish font rasterization, we first added support for the CS 184 Rasterizer project to parse .ttf files and draw Bezier curves. We then implemented an algorithm to rasterize flood-filled glyphs, and modified it to work with supersampling. Finally, we added the ability to map textures onto the glyphs and optimized our code. </p>
@@ -23,7 +23,7 @@
 
         <h6>Technical Approach</h6>
         <p><b>Processing TrueType Files and Displaying Results</b></p>
-        <p>In order to parse and extract data from TrueType files, we used the FreeType library (<a href="https://freetype.org">https://freetype.org</a>). After initializing the library and setting the font using the input path to a .ttf file, we iterate through each character in the input text and call FT_Load_Char on the character and with the FT_LOAD_NO_SCALE flag set. Once the current glyph is loaded into the glyph slot in outline format, we extract the glyph's outline, which contains a list of points, a list of corresponding tags, and a list of shorts that gives the end points of each contour within the outline. After using FreeType to obtain this data, we then manually process the data to manually assemble individual Bézier curves and to scale and position glyphs. </p>
+        <p>In order to parse and extract data from TrueType files, we used the <a href="https://freetype.org">FreeType</a> library. After initializing the library and setting the font using the input path to a .ttf file, we iterate through each character in the input text and call FT_Load_Char on the character and with the FT_LOAD_NO_SCALE flag set. Once the current glyph is loaded into the glyph slot in outline format, we extract the glyph's outline, which contains a list of points, a list of corresponding tags, and a list of shorts that gives the end points of each contour within the outline. After using FreeType to obtain this data, we then manually process the data to manually assemble individual Bézier curves and to scale and position glyphs. </p>
         <p>Assembling Bézier curves.<br />For each contour in the glyph outline, we iterate through the contour's points and use the corresponding tags as well as FreeType's conventions to assemble the lines, quadratic Bézier curves, and cubic Bézier curves that make up the glyph outline. There are three types of tags: FT_CURVE_TAG_ON, which specifies an end point of a line or curve, FT_CURVE_TAG_CONIC, which specifies a control point of a quadratic Bézier curve, and FT_CURVE_TAG_CUBIC, which specifies a control point of a cubic Bézier curve.
            Our original algorithm for decomposing a contour's points into lines and curves was to iterate through the points in the contour, starting a new line/curve when an end point is seen, adding any control points seen before the next end point, and using the next end point to finish the current line/curve as well as begin the next. While the general approach of this algorithm was fine, we were getting incorrect results because we were not following FreeType's conventions for outline curve decomposition. Once we found the <a href="https://www.freetype.org/freetype2/docs/glyphs/glyphs-6.html">documentation</a> that specifies these conventions, we fixed our algorithm by applying the following rules:</p>
         <ol>
@@ -45,7 +45,13 @@
         <p> One method of text rasterization is through the glyph outlines created by the lines and curves. In order to rasterize these outlines, after the TrueType file is parsed into a set of BezierCurve objects, each of these objects are passed into RasterizerImp::rasterize_bc. If the curve consists of one or two points, rasterize_point() or rasterize_line() are called. Otherwise, for a range of t values between 0 and 1 (incrementing by .005 gives a smooth enough result for text unless it is very large) the point on the curve corresponding to that t value is calculated iteratively by linearly interpolating each consecutive pair of points until there is only one point left. This value is then rounded down to the nearest integer to get a pixel coordinate and added to the pixel buffer using the fill_pixel method.  </p>
 
         <p> One problem encountered was adjusting the Bezier curve calculation to be iterative instead of recursive. In project 2, we implemented the calculation recursively. However, since the calculation is being done multiple times within a larger function (rasterize_bc), a recursive call does not work. An iterative solution was much cleaner. Another problem was determining the appropriate step size for incrementing t. Too large and there are gaps in the outline, but the smaller the step size, the longer it takes to rasterize an outline. .005 is a good balance between the two - it does not result in gaps unless letters are very large, but is not so small that rasterization takes forever. </p>
-
+        
+        <figure align="middle">
+          <img src="images/exampleoutline.png" width="300px"  height="250px" />
+          <img src="images/referenceoutline.png" width="300px" height="250px"/>
+          <p>Example of our outline rasterization on the left, actual character for reference on the right.</p>
+        </figure>
+             
         <p><b><br />Rasterizing Flood-Filled Text</b></p>
         <p> To rasterize flood-filled text, we utilized an algorithm that calculated intersections between each row in the pixel buffer and the Bezier curves for each glyph in the text. Since the .ttf file specifies the control points of the Bezier curve, we use the Bezier curve equation to solve for the t parameter associated with the y-position of the row.  The equation can then be used to solve for the x-position of the intersection using the newfound t parameter and the control points. </p>
         <figure>
@@ -55,6 +61,12 @@
         <p>We do this with the y-value of a row and every Bezier curve in the text to accumulate a set of intersection points, and then sort them from left to right. From there, every other pair of intersections can be filled, since those will represent being "inside" of a glyph. This process is repeated for every row in the buffer to create flood-filled text. </p>
         <p>Our approach likely differs from the FreeType library and other library's approaches to rasterization, which utilize extra steps to ensure clarity through techniques such as grid alignment. These extra procedures seemed complex and not well-documented, and so we thought it would be better to take a simpler approach.</p>
         <p>One of the problems encountered during flood-filling was that one source stated that .ttf files specified only quadratic Bezier curves and lines, which are easy to solve, but upon actually working with them, we discovered that they can include cubic Beziers as well. The <a href="https://math.vanderbilt.edu/schectex/courses/cubic/">formula</a> for solving cubic polynomials is tedious to implement, and instead we looked at adding a <a href="http://math.ivanovo.ac.ru/dalgebra/Khashin/poly/index.html">library</a> for solving polynomial equations. A good lesson learned was that sometimes your sources can be incomplete or incorrect, and working with real data often involves surprises. </p>
+        <p>Below are some examples of our font rasterization with flood-filling.</p>
+        <figure align="middle">
+          <img src="images/floodfill_arial.png" width="20%"/><br /> 
+          <img src="images/floodfill_tnr.png"/ width="60%"><br />
+          <img src="images/floodfill_opensans.png" width="40%"/>
+        </figure>
 
         <p><b><br />Anti-aliasing via Supersampling</b></p>
         
@@ -66,10 +78,25 @@
 
         <p>Another issue was figuring out the order in which to iterate through supersamples. There were two main options - for each row, iterate through supersamples within each pixel or iterate through each row of supersamples. The first approach seemed pretty naive and simple to implement, but inefficient, whereas the second seemed more complex but ultimately made more sense. Ultimately, the first was implemented to test out the technique and figure out which areas were important for the second approach, and then iterating through rows of supersamples was implemented, with comparisons made to the pixel-by-pixel approach to see where bugs arose and if there were any logical errors. </p>
 
+        <figure align="middle">
+          <img src="images/aliasing.png" />
+          <img src="images/antialiasing.png" />
+          <p>Example without supersampling on the left, example with supersampling on the right.</p>
+        </figure>
+             
         <p></p><b><br />Texture Mapping</b></p>
         <p> Implementing texture mapping involved two main problems - reading in PNG files to create the textures, and integrating our Project 1 texture mapping code into our font rasterizer. In order to access PNG files to create textures, the relative path to the PNG must be passed in as an argument on the command line. The lodepng C++ package is used to read that PNG into a vector of pixels. The alpha channel is stripped and a new Texture object is created. This method of reading in PNG files to create textures is adapted from the Project 1 code. This texture is then included as part of each glyph object that is rasterized. The way that the texture is used for mapping is that it is essentially stretched to fit the bounding box of the text, and then sampled using uv coordinates from 0 to 1. When rasterizing a glyph, for each pixel that is supposed to be colored, the color is calculated using the bilinear texture sampling method from Project 1. Bilinear sampling involves sampling the 4 points around the uv coordinate of the pixel, and linearly interpolating them to create a weighted average color for the point. </p>
 
         <p> The trickiest part of implementing this feature was reading in the PNG file to create the texture and then deciding how to store that texture. Because of the way our font rasterizer stores glyphs, it made more sense to store a pointer to the texture with each individual glyph, rather than as a global variable. </p>
+        
+        <p>Below are some examples of our font rasterization with texture mapping.</p>
+        <figure align="middle">
+          <img src="images/fire_texture.png"/>
+          <img src="images/water_texture.png"/>
+         </figure>
+        <figure align="middle">
+          <img src="images/color_texture.png" />
+        </figure>
 
         <p><b><br />Optimizations</b></p>
         <p>[Summary of your technical approach, techniques used, algorithms implemented. Highlight how your approach varied from the references used, the unique decisions you made and why.]
@@ -79,23 +106,38 @@
         <div class="divider"></div>
 
         <h6>Results</h6>
-        <p>[Your final images, animations, video of your system (whichever is relevant). You can include results that you think show off what you built but that you did not have time to go over on presentation day.]</p>
-
-        <p><b><br />Flood-filled text</b></p>
-        <figure>
-        <img src="images/floodfill.PNG" width="50%">
-        </figure> 
-
-        <p><b><br />Texture mapping</b></p>
-        <figure>
-        <img src="images/texture_mapping.PNG" width="50%">
-        </figure> 
-
-        <p><b><br />Comparison to real text</b></p>
-        <figure>
-        <img src="images/comparison.PNG" width="50%">
-        <figcaption> Comparison of our rasterized text to text from Google Slides. Our text is in the green boxes. </figcaption>
-        </figure> 
+        <table>
+          <thead>
+            <tr>
+              <th>Example of font</th>
+              <th>Our font rasterization</th>
+            </tr>
+          </thead>
+          <tr>
+            <td>
+              <img src="images/actual_arial.png" width="30%">
+            </td>
+            <td>
+              <img src="images/result_arial.png" width="20%">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <img src="images/actual_tnr.png" width="80%">
+            </td>
+            <td>
+              <img src="images/result_tnr.png" width="50%">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <img src="images/actual_brushscript.png" width="80%">
+            </td>
+            <td>
+              <img src="images/result_brushscript.png" width="50%">
+            </td>
+          </tr>
+        </table>
 
         <div class="divider"></div>
 
