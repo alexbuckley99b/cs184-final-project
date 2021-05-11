@@ -102,16 +102,16 @@
         <br /> Computing bezier curve intersections can be computationally intensive, especially for cubic bezier curves. Thus, taking inspiration from Bounding Volume Hierarchies, we decided to try and prune the amount of intersection tests required to get accurate results. Because our font rasterization program is run once on a given input, building an entire BVH would introduce high overhead without taking much advantage of the performance improvements a BVH offers. Instead, when reading in a bezier curve for a glyph, we store the bounding box around the bezier curve's control points. Because a bezier curve will never contain any points outside of this bounding box (this is because a bezier curve is a composition of convex LERP functions between control points), we can prune expensive intersection tests by doing simple bounds checks with the bounding boxes beforehand. This optimization proved that simple bounds checks, along with cached values (precomputing these bounds when reading in the bezier curve) can come a long way in improving performance. On average, this optimization tended to improve benchmark performance by about 50%. </p>
 
 	<figure align="middle">
-          <img src="images/bounding_box.png" width="50%"/>
-          <p>Example of a bounding box about the control points (red circles) of a bezier curve.</p>
+          <img src="images/bounding_box.png" width="30%"/>
+          <figcaption>Example of a bounding box about the control points (red circles) of a bezier curve.</figcaption>
 	</figure>
 	
 	<p> Optimization 2: Multithreading
 	<br /> Given that processor designs are becoming more and more parallel over time, we decided to exploit thread-level-parallelism in our code. Because our algorithm works independently on all rows of pixels, introducing such parallelism was not difficult; we simply dispatched ranges of supersampled pixel rows (ex. rows 0-25) to different software threads. Measuring the performance improvements of this approach proved difficult. Since the same total code was being executed, the only benchmark we could use to measure performance was clock-time. On top of this, different machines react differently towards multithreaded code, some even performing worse on just a primitive multithreaded for-loop. The C++ threading library seems to work inconsistently across different machines, perhaps not exploiting hardware multiprocessing on all setups. Thus, the benchmarks we present below are optimistic, showing the performance improvements on the machine that reacted best to the standard C++ multithreading library. Through our multithreading optimizations, we learned that exploiting hardware-level resources / threads can be difficult to measure and standardize across multiple users / machines. </p>
 
 	<figure align="middle">
-          <img src="images/optimization_benchmarks.png" width="80%"/>
-          <p>Optimization benchmarks in milliseconds on optimistic setup.</p>
+          <img src="images/optimization_benchmarks.png" width="60%"/>
+          <figcaption>Optimization benchmarks in milliseconds on optimistic setup.</figcaption>
 	</figure>
         
         <div class="divider"></div>
@@ -184,8 +184,8 @@
 
         <h6>Contributions From Each Team Member</h6>
         <p> Kyle Wallace - Using FreeType to parse TrueType files, outline curve decomposition, scaling and positioning glyphs, passing decomposed outlines to the rasterizer. </p>
-        <p> Raiya Choudhuri - Initial attempts to write a flood-fill algorithm, supersampling, milestone website </p>
-	<p> Scott Durand - Assist in library imports / use, contribute to basic algorithm, debugging, optimizations </p>
+        <p> Raiya Choudhuri - Initial attempts to write a flood-fill algorithm, supersampling, milestone website. </p>
+	<p> Scott Durand - Assist in library imports / use, contribute to basic algorithm, debugging, optimizations. </p>
         <p> Alex Buckley - Bezier curve calculation, rasterization of glyph outlines, reading PNG files, texture mapping, videos.</p>
 
         <div class="divider"></div>
